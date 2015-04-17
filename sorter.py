@@ -1,10 +1,9 @@
-
+import math
 __author__ = 'pawel'
 class Sorter:
     def merge_sort(self,array):
         if(len(array)>1):
             half = len(array)/2
-            print half
             left = array[:half]
             right = array[half:]
 
@@ -40,6 +39,7 @@ class Sorter:
                     array[j],array[j+1]=array[j+1],array[j]
             counter+=1
 
+
     def check_sorting(self,array):
         for i in range(len(array)-1):
             if(array[i]>array[i+1]):
@@ -55,7 +55,46 @@ class Sorter:
                 i-=1
             array[i+1] = key
 
+    def quicksort(self,array,first,last):
+        if first < last :
+            pivot=array[first]
+            left = first+1
+            right = last
+            done = False
+            while not done:
+                while left <= right and array[left] < pivot :
+                    left+=1
+                while left <= right and array[right] > pivot :
+                    right-=1
+                if left > right:
+                    done = True
+                else :
+                    array[left],array[right] = array[right],array[left]
+            array[first],array[right]=array[right],array[first]
+            self.quicksort(array,first,right-1)
+            self.quicksort(array,right+1,last)
 
+    def max_heap(self,array,i,length):
+        left = 2*i
+        right = 2*i+1
+        if left <= length and  array[left-1] > array[i-1]:
+            largestAt = left
+        else:
+            largestAt = i
+        if right <= length and array[right-1] > array[largestAt-1]:
+            largestAt = right
+        if largestAt != i:
+            array[i-1],array[largestAt-1] = array[largestAt-1],array[i-1]
+            self.max_heap(array,largestAt,length)
 
-
-
+    def heapsort(self,array):
+        '''sorting using heapsort, nlogn, inline function, remember to use copy of array as attribute'''
+        # create max heap
+        for i in range(int(math.floor(len(array)/2)+1),0,-1):
+            self.max_heap(array,i,len(array))
+        #sort
+        length = len(array)
+        for i in range(len(array),1,-1):
+            array[0],array[length-1]=array[length-1],array[0]
+            length-=1
+            self.max_heap(array,1,length)
